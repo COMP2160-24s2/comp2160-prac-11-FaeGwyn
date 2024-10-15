@@ -80,9 +80,18 @@ public class UIManager : MonoBehaviour
     private void MoveCrosshair() 
     {
         Vector2 mousePos = mouseAction.ReadValue<Vector2>();
+         //looks like it's using the in game screen coordinates (screen space)
 
         // FIXME: Move the crosshair position to the mouse position (in world coordinates)
-        // crosshair.position = ...;
+        Ray ray = Camera.main.ScreenPointToRay(new Vector3(mousePos.x, mousePos.y, 0));
+
+        RaycastHit hit; 
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        {
+            crosshair.position = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, hit.point.z));
+        }
+        
+        Debug.Log("Crosshair Position" + crosshair.position);
     }
 
     private void SelectTarget()
